@@ -6,7 +6,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
-COPY .env .
 
 RUN mkdir -p logs internal_assets && chmod 777 logs
 
