@@ -1,0 +1,19 @@
+===== INTERNAL CREDENTIAL BACKUP =====
+Generated: 2026-05-26 00:00:00
+Classification: CONFIDENTIAL
+
+[Database]
+DB_HOST=localhost
+DB_USER=ctfdb
+DB_PASS=s3cur3_db_p4ss!
+
+[Admin Portal OTP]
+# Required for /admin endpoint. Rotate monthly.
+ADMIN_OTP=OTP-7f3a9b2c
+
+[Notes]
+- Admin OTP must be entered after logging in as admin user.
+- Do not share this file outside management team.
+=======================================
+
+FLAG{credentials_leaked_path_traversal_2026}
