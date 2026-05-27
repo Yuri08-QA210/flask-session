@@ -105,7 +105,7 @@ def panel():
 def admin_panel():
     if session.get("user") != "admin" or session.get("role") != "quanly": return "403", 403
     if request.method == "POST":
-        if request.form.get("otp") == ADMIN_OTP: return "FLAG{admin_privileged_access_granted_2026}"
+        if request.form.get("otp") == ADMIN_OTP: return "QA210{yamate_senpai_access_granted_2026}"
     html = "<!doctype html><html><head><title>Admin</title>" + BASE_CSS + "</head><body><div class='box'><form method='POST'><input name='otp' placeholder='OTP'><button>VERIFY</button></form></div></body></html>"
     return render_template_string(html)
 
