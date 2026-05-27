@@ -39,17 +39,22 @@ def is_admin():
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not is_admin(): return "403 Forbidden", 403
+        if not is_admin():
+            return "403 Forbidden", 403
         return f(*args, **kwargs)
     return decorated_function
 
 @app.before_request
 def max_waf():
-    path_and_query = (request.full_path + str(request.values.to_dict())).lower()
-    blacklisted = [r"\.\.", r"\.\/", r"\{", r"\}", r"\(", r"\)", r"select", r"union", r"exec", r"%00"]
-    if any(re.search(p, path_and_query) for p in blacklisted):
+    path_check = request.path.lower()
+    query_check = request.query_string.decode(errors="ignore").lower()
+    values_check = " ".join(request.values.to_dict().values()).lower()
+    combined = path_check + " " + query_check + " " + values_check
+
+    blacklisted = [r"\.\.", r"\.\/", r"\(", r"\)", r"select", r"union", r"exec", r"%00"]
+    if any(re.search(p, combined) for p in blacklisted):
         return "403 Forbidden - Security Alert", 403
-    
+
     ua = request.headers.get("User-Agent", "").lower()
     if any(s in ua for s in ["curl", "wget", "sqlmap", "nikto", "gobuster"]):
         return "403 Forbidden - Bot Detected", 403
@@ -62,7 +67,8 @@ def page_not_found(e):
 def login():
     error = ""
     if request.method == "POST":
-        u, p = request.form.get("user", "").strip(), request.form.get("pass", "")
+        u = request.form.get("user", "").strip()
+        p = request.form.get("pass", "")
         if USERS_DB.get(u) and USERS_DB[u]["pass"] == p:
             session.clear()
             session["user"] = u
@@ -72,7 +78,8 @@ def login():
 
 @app.route("/panel")
 def panel():
-    if not session.get("user"): return redirect(url_for("login"))
+    if not session.get("user"):
+        return redirect(url_for("login"))
     u = session.get("user")
     role = USERS_DB.get(u, {}).get("role")
     return render_template_string("<!doctype html><html><head><title>Panel</title>"+BASE_CSS+"</head><body><div class='card'><h3>// DASHBOARD</h3><p>User: {{ u }}</p><p>Role: {{ role }}</p>{% if role == 'support' or role == 'quanly' %}<a href='/view-log'>View Log</a>{% endif %}</div></body></html>", u=u, role=role)
@@ -81,7 +88,8 @@ def panel():
 @admin_required
 def admin_panel():
     if request.method == "POST":
-        if request.form.get("otp") == ADMIN_OTP: return "QA210{yamate_senpai_access_granted_2026}"
+        if request.form.get("otp") == ADMIN_OTP:
+            return "QA210{yamate_senpai_access_granted_2026}"
     return render_template_string("<!doctype html><html><head><title>Admin</title>"+BASE_CSS+"</head><body><div class='box'><form method='POST'><input name='otp' placeholder='OTP'><button>VERIFY</button></form></div></body></html>")
 
 @app.route("/view-log")
