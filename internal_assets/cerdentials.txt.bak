@@ -16,4 +16,4 @@ ADMIN_OTP=OTP-7f3a9b2c
 - Do not share this file outside management team.
 =======================================
 
-FLAG{credentials_leaked_path_traversal_2026}
+QA{credentials_leaked_path_traversal_2026}
