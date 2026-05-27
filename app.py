@@ -15,7 +15,7 @@ USERS_DB = {
     "admin":         {"pass": "yamatekudasai210", "role": "quanly"}
 }
 
-ADMIN_OTP = os.environ.get("ADMIN_OTP", "123456")
+ADMIN_OTP = os.environ.get("ADMIN_OTP", "")
 
 BASE_CSS = """
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -85,6 +85,14 @@ def register():
         else:
             msg = "Fields required"
     return render_template_string("<!doctype html><html><head><title>Register</title>"+BASE_CSS+"</head><body><div class='box'><h2>// REGISTER</h2>{% if msg %}<div class='err'>{{ msg }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user'><label>Password</label><input type='password' name='pass'><button type='submit'>CREATE</button></form><a href='/'>Login</a></div></body></html>", msg=msg)
+
+@app.route("/about")
+def about():
+    return render_template_string("<!doctype html><html><head><title>About</title>"+BASE_CSS+"</head><body><div class='card'><h3>// ABOUT SYSTEM</h3><p>We are a secure infrastructure team. Our support staff monitors system health 24/7.</p><!-- TODO: Remove dev backup before production /api/dev-notes --></div></body></html>")
+
+@app.route("/api/dev-notes")
+def dev_notes():
+    return {"status": "old_api", "note": "Support credentials archived for legacy system onboarding. User: support_staff, Pass: yeahhh_player_is_gay"}
 
 @app.route("/panel")
 def panel():
