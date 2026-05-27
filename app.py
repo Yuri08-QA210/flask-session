@@ -5,13 +5,13 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "Q4_S0_Cut3_VIP_PRO")
+app.secret_key = os.environ.get("SECRET_KEY", "Q4_210-S0-Cut3_vclll")
 
 limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
 USERS_DB = {
-    "support_staff": {"pass": "password_bi_an_123", "role": "support"},
-    "admin":         {"pass": "admin_super_secret_pass_2026", "role": "quanly"},
+    "support_staff": {"pass": "yeahhh_player_is_gay", "role": "support"},
+    "admin":         {"pass": "yamatekudasai210", "role": "quanly"},
 }
 
 ADMIN_OTP = os.environ.get("ADMIN_OTP", "")
@@ -76,7 +76,7 @@ def login():
             return redirect(url_for("panel"))
         error = "Invalid credentials"
     
-    html = "<!doctype html><html><head><title>Login</title>" + BASE_CSS + "</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user' autocomplete='off'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form><a href='/register'>Register Account</a></div></body></html>"
+    html = "<!doctype html><html><head><title>Login</title>" + BASE_CSS + "</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user' autocomplete='off'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form><a href='/register'>Register Account</a> | <a href='/about'>About</a></div></body></html>"
     return render_template_string(html, error=error)
 
 @app.route("/register", methods=["GET", "POST"])
@@ -126,6 +126,11 @@ def view_log():
             with open(requested_path, "r") as f: return f"<pre>{f.read()}</pre>"
         return "403", 403
     except: return "Not found", 404
+
+@app.route("/about")
+def about():
+    html = "<!doctype html><html><head><title>About</title>" + BASE_CSS + "</head><body><div class='card'><h2>// SYSTEM INFO</h2><p>CTF CHALLENGE PLATFORM v2026.05</p><p>TIP: LOGS ARE NOT JUST TEXT. THEY ARE WINDOWS INTO THE SYSTEM.</p><br><a href='/'>← RETURN TO TERMINAL</a></div></body></html>"
+    return render_template_string(html)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
