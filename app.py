@@ -30,6 +30,8 @@ BASE_CSS = """
     .err { color: var(--neon-pink); font-size: 0.8rem; margin-bottom: 1rem; text-shadow: 0 0 5px var(--neon-pink); }
     a { color: var(--neon-pink); text-decoration: none; font-size: 0.85rem; }
     .card { max-width: 600px; width: auto; }
+    .about-text { font-size: 0.85rem; line-height: 1.6; color: #aaa; margin: 1rem 0; }
+    .about-text span { color: var(--neon-blue); }
 </style>
 """
 
@@ -74,7 +76,7 @@ def login():
             session["user"] = u
             return redirect(url_for("panel"))
         error = "Invalid credentials"
-    return render_template_string("<!doctype html><html><head><title>Login</title>"+BASE_CSS+"</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form><a href='/register'>Register</a></div></body></html>", error=error)
+    return render_template_string("<!doctype html><html><head><title>Login</title>"+BASE_CSS+"</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form><a href='/register'>Register</a> | <a href='/about'>About</a></div></body></html>", error=error)
 
 @app.route("/panel")
 def panel():
@@ -91,6 +93,10 @@ def admin_panel():
         if request.form.get("otp") == ADMIN_OTP:
             return "QA210{yamate_senpai_access_granted_2026}"
     return render_template_string("<!doctype html><html><head><title>Admin</title>"+BASE_CSS+"</head><body><div class='box'><form method='POST'><input name='otp' placeholder='OTP'><button>VERIFY</button></form></div></body></html>")
+
+@app.route("/about")
+def about():
+    return render_template_string("<!doctype html><html><head><title>About</title>"+BASE_CSS+"</head><body><div class='card'><h3>// ABOUT</h3><div class='about-text'><p><span>SYSTEM:</span> Secure Internal Management Portal v2.1</p><p><span>STATUS:</span> Operational</p><p><span>ACCESS:</span> Restricted to authorized personnel only</p><p><span>NOTICE:</span> All activity is monitored. Unauthorized access attempts will be logged.</p><p><span>CONTACT:</span> support@internal.local</p></div><a href='/'>BACK</a></div></body></html>")
 
 @app.route("/view-log")
 def view_log():
