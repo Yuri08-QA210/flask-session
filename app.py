@@ -66,6 +66,7 @@ def panel():
     if not session.get("user"): return redirect(url_for("login"))
     u = session.get("user")
     role = USERS_DB.get(u, {}).get("role")
+    # Cập nhật link dẫn đến route có bug
     return render_template_string("<!doctype html><html><head><title>Panel</title>"+BASE_CSS+"</head><body><div class='card'><h3>// DASHBOARD</h3><p>User: {{ u }}</p><p>Role: {{ role }}</p>{% if role == 'support' or role == 'quanly' %}<a href='/view-log?file=system.log'>View Log</a>{% endif %}</div></body></html>", u=u, role=role)
 
 @app.route("/admin", methods=["GET", "POST"])
@@ -79,8 +80,11 @@ def admin_panel():
 def view_log():
     if not (USERS_DB.get(session.get("user", ""), {}).get("role") in ["support", "quanly"]):
         return "403 Forbidden", 403
+    
+    # LỖ HỔNG PATH TRAVERSAL TẠI ĐÂY
     log_file = request.args.get("file", "system.log")
     try:
+        # Cho phép đọc bất kỳ file nào từ thư mục hiện tại
         return send_from_directory(os.getcwd(), log_file)
     except Exception:
         return "404 Not Found", 404
