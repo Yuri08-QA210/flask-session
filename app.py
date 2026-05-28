@@ -63,7 +63,9 @@ def login():
             session["user"] = u
             return redirect(url_for("panel"))
         error = "Invalid credentials"
-    return render_template_string("<!doctype html><html><head><title>Login</title>"+BASE_CSS+"</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form></div></body></html>", error=error)
+    
+    return render_template_string("<!doctype html><html><head><title>Login</title>"+BASE_CSS+"</head><body><div class='box'><h2>// LOGIN</h2>{% if error %}<div class='err'>{{ error }}</div>{% endif %}<form method='POST'><label>Username</label><input name='user'><label>Password</label><input type='password' name='pass'><button type='submit'>ACCESS</button></form><!-- TODO: Remember to send new credentials to support_staff: yeahhh_player_is_gay --></div></body></html>", error=error)
+
 
 @app.route("/panel")
 def panel():
