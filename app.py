@@ -11,10 +11,10 @@ USERS_DB = {
     "admin":         {"pass": "yamatekudasai210", "role": "quanly"},
 }
 
-ADMIN_OTP = os.environ.get("ADMIN_OTP", "123456")
+ADMIN_OTP = os.environ.get("ADMIN_OTP", "OTP-7f3a9b2c")
 
 BASE_CSS = """
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://googleapis.com" rel="stylesheet">
 <style>
     :root { --neon-blue: #00f3ff; --neon-pink: #ff00ff; --bg-dark: #050505; }
     body { font-family: 'Share Tech Mono', monospace; background: var(--bg-dark); color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)); }
@@ -66,7 +66,7 @@ def panel():
     if not session.get("user"): return redirect(url_for("login"))
     u = session.get("user")
     role = USERS_DB.get(u, {}).get("role")
-    return render_template_string("<!doctype html><html><head><title>Panel</title>"+BASE_CSS+"</head><body><div class='card'><h3>// DASHBOARD</h3><p>User: {{ u }}</p><p>Role: {{ role }}</p>{% if role == 'support' or role == 'quanly' %}<a href='/view-log'>View Log</a>{% endif %}</div></body></html>", u=u, role=role)
+    return render_template_string("<!doctype html><html><head><title>Panel</title>"+BASE_CSS+"</head><body><div class='card'><h3>// DASHBOARD</h3><p>User: {{ u }}</p><p>Role: {{ role }}</p>{% if role == 'support' or role == 'quanly' %}<a href='/view-log?file=system.log'>View Log</a>{% endif %}</div></body></html>", u=u, role=role)
 
 @app.route("/admin", methods=["GET", "POST"])
 @admin_required
@@ -79,7 +79,11 @@ def admin_panel():
 def view_log():
     if not (USERS_DB.get(session.get("user", ""), {}).get("role") in ["support", "quanly"]):
         return "403 Forbidden", 403
-    return "Log content: System initialized. No critical threats detected."
+    log_file = request.args.get("file", "system.log")
+    try:
+        return send_from_directory(os.getcwd(), log_file)
+    except Exception:
+        return "404 Not Found", 404
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
